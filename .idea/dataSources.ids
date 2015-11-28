@@ -4148,15 +4148,30 @@ User</columns>
         <data-type>timestamp</data-type>
         <default-expression>&apos;0000-00-00 00:00:00&apos;</default-expression>
       </column>
-      <index id="1021" parent="99" name="users_email_unique">
+      <column id="1021" parent="99" name="is_valid_account">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+        <default-expression>&apos;0&apos;</default-expression>
+      </column>
+      <column id="1022" parent="99" name="nb_times_bloked">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+        <default-expression>&apos;0&apos;</default-expression>
+      </column>
+      <column id="1023" parent="99" name="desactivated">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+        <default-expression>&apos;0&apos;</default-expression>
+      </column>
+      <index id="1024" parent="99" name="users_email_unique">
         <columns>email</columns>
         <unique>1</unique>
       </index>
-      <key id="1022" parent="99" name="PRIMARY">
+      <key id="1025" parent="99" name="PRIMARY">
         <columns>id</columns>
         <primary>1</primary>
       </key>
-      <key id="1023" parent="99" name="users_email_unique">
+      <key id="1026" parent="99" name="users_email_unique">
         <columns>email</columns>
         <underlying-index>users_email_unique</underlying-index>
       </key>

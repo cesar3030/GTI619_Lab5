@@ -198,8 +198,12 @@
               @endforeach
             </div>
             <div class="col-md-4">
-              <button class="btn btn-default">Disable</button>
-              <button class="btn btn-default">Reset Password</button>
+              @if($user->desactivated === 1)
+                <button name="activate_{{$user->id}}" class="btn btn-success" style="margin-bottom: 5px;">Activate</button>
+              @else
+                <button name="desactivate_{{$user->id}}" class="btn btn-danger" style="margin-bottom: 5px;">Desactivate</button>
+              @endif
+                <button name="reset_{{$user->id}}" class="btn btn-warning" style="margin-bottom: 5px;">Reset Password</button>
             </div>
           </div>
 
@@ -278,6 +282,48 @@
         console.log(url);
         ajaxBackend(url);
       });
+
+
+      $("button").on("click",function(){
+
+        var name = $(this).attr("name").split("_");
+        var url='';
+        var newClass="";
+        var newName="";
+        var newText="";
+
+        switch(name[0]){
+          case "activate":
+            url="/user/"+name[1]+"/account/desactivate/0";
+                  newClass="btn btn-danger";
+                  newName="desactivate_"+name[1];
+                  newText="Desactivate";
+            break;
+          case "desactivate":
+            url="/user/"+name[1]+"/account/desactivate/1";
+            newClass="btn btn-success";
+            newName="activate_"+name[1];
+            newText="Activate";
+            break;
+          case "reset":
+            url="/user/"+name[1]+"/password/reset";
+            break;
+        }
+
+
+        console.log(url);
+        ajaxBackend(url);
+
+        if(newClass.length>0 && newName.length>0 && newText.length>0){
+          $(this).text(newText);
+          $(this).attr("class",newClass);
+          $(this).attr('name',newName);
+        }
+
+      });
+
+
+
     });
 
 

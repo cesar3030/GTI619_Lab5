@@ -83,6 +83,34 @@ class UserController extends Controller {
 	}
 
 	/**
+	 * Update the user's role.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function resetPassword($userId)
+	{
+		$password = bcrypt("newPassword");
+
+		//ajouter le model de la table resetpassword et ajouter un password temp
+		/*User::where('id',$userId)
+				->update(['password' => $password]);*/
+
+	}
+
+	/**
+	 * Update the user's role.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function accountActivation($userId,$value)
+	{	$user = new User;
+		$user->id=$userId;
+		$user->setAccountDesactivate($value);
+	}
+
+	/**
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  int  $id

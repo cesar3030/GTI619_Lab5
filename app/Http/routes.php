@@ -83,11 +83,21 @@ Route::get('/square',[
 	]);
 
 /*
- |-------- Admin routes
+ |-------- User routes
  */
 	Route::get('/user/{userId}/role/{roleId}', [
 			'middleware' => ['auth', 'roles'],
 			'uses' => 'UserController@updateRole',
+			'roles' => ['root']
+	]);
+	Route::get('/user/{userId}/password/reset', [
+			'middleware' => ['auth', 'roles'],
+			'uses' => 'UserController@resetPassword',
+			'roles' => ['root']
+	]);
+	Route::get('/user/{userId}/account/desactivate/{value}', [
+			'middleware' => ['auth', 'roles'],
+			'uses' => 'UserController@accountActivation',
 			'roles' => ['root']
 	]);
 
