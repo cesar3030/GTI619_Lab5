@@ -17,7 +17,7 @@ class CreateConfigurationTable extends Migration
             $table->integer('number_attempt_allowed');
             $table->integer('time_restriction');
             $table->integer('number_last_password_disallowed');
-            $table->integer('password_time_life'); // time in seconds
+            $table->integer('password_time_life'); // duratation in days
             $table->integer('password_min_length');// minimal length for a password
             $table->integer('password_lower_case_required');// 1: at least 1 lower case required 0: no lower case required
             $table->integer('password_upper_case_required');// 1: at least 1 upper case required 0: no upper case required

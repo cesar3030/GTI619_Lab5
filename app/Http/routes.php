@@ -27,11 +27,61 @@ Route::get('/square',[
      'roles' => ['root','square']
 ]);
 
-Route::get('/admin', [
-     'middleware' => ['auth', 'roles'],
-     'uses' => 'AdminController@index',
-     'roles' => ['root']
-]);
+
+/*
+ |-------- Admin routes
+ */
+	Route::get('/admin', [
+		 'middleware' => ['auth', 'roles'],
+		 'uses' => 'AdminController@index',
+		 'roles' => ['root']
+	]);
+	Route::get('/admin/config/attempt/{nbAttempts}', [
+			'middleware' => ['auth', 'roles'],
+			'uses' => 'AdminController@setNumberAttemptAllowed',
+			'roles' => ['root']
+	]);
+	Route::get('/admin/config/restriction/{nbSeconds}', [
+			'middleware' => ['auth', 'roles'],
+			'uses' => 'AdminController@setTimeRestriction',
+			'roles' => ['root']
+	]);
+	Route::get('/admin/config/password/disallow/{nbPasswordDisallow}', [
+			'middleware' => ['auth', 'roles'],
+			'uses' => 'AdminController@setNumberLastPasswordDisallowed',
+			'roles' => ['root']
+	]);
+	Route::get('/admin/config/password/life/{nbDays}', [
+			'middleware' => ['auth', 'roles'],
+			'uses' => 'AdminController@setPasswordTimeLife',
+			'roles' => ['root']
+	]);
+	Route::get('/admin/config/password/length/{length}', [
+			'middleware' => ['auth', 'roles'],
+			'uses' => 'AdminController@setPasswordMinLength',
+			'roles' => ['root']
+	]);
+	Route::get('/admin/config/password/character/lower/{isRequired}', [
+			'middleware' => ['auth', 'roles'],
+			'uses' => 'AdminController@setPasswordLowerCaseRequired',
+			'roles' => ['root']
+	]);
+	Route::get('/admin/config/password/character/upper/{isRequired}', [
+			'middleware' => ['auth', 'roles'],
+			'uses' => 'AdminController@setPasswordUpperCaseRequired',
+			'roles' => ['root']
+	]);
+	Route::get('/admin/config/password/character/special/{isRequired}', [
+			'middleware' => ['auth', 'roles'],
+			'uses' => 'AdminController@setPasswordSpecialCharactersRequired',
+			'roles' => ['root']
+	]);
+	Route::get('/admin/config/password/character/number/{isRequired}', [
+			'middleware' => ['auth', 'roles'],
+			'uses' => 'AdminController@setPasswordNumberRequired',
+			'roles' => ['root']
+	]);
+
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',
