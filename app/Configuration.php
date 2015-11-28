@@ -23,7 +23,7 @@ class Configuration extends Model {
      *
      * @var array
      */
-    protected $hidden = ['number_attempt_allowed','time_restriction', 'number_last_password_disallowed','password_time_life','password_min_length','password_lower_case_required','password_upper_case_required','password_special_charact'];
+    protected $hidden = [];
 
 
 

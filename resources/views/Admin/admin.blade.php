@@ -8,7 +8,170 @@
       <div class="panel panel-default">
         <div class="panel-heading">General parameters</div>
         <div class="panel-body">
-          You are in the admin page
+          @foreach ($appConfig as $app)
+          <form id="config_form" class="form-horizontal">
+            <fieldset>
+
+              <!-- Form Name -->
+              <legend>Application configuration</legend>
+
+              <!-- Text input-->
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="number_attempt_allowed">Number Attempt allowed</label>
+                <div class="col-md-4">
+                  <input id="number_attempt_allowed" name="number_attempt_allowed" value="{{$app->number_attempt_allowed}}" type="number" min="1" placeholder="(number)" class="form-control input-md">
+
+                </div>
+              </div>
+
+              <!-- Text input-->
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="number_last_password_disallowed">Number last password disallowed</label>
+                <div class="col-md-4">
+                  <input id="number_last_password_disallowed" name="number_last_password_disallowed" value="{{$app->number_last_password_disallowed}}" type="number" min="0" placeholder="(a number)" class="form-control input-md">
+
+                </div>
+              </div>
+
+              <!-- Multiple Radios (inline) -->
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="password_number_required">Password number required</label>
+                <div class="col-md-4">
+                  @if($app->password_number_required === 1)
+                  <label class="radio-inline" for="password_number_required-0">
+                    <input type="radio" name="password_number_required" id="password_number_required-0" value="1" checked="checked">
+                    yes
+                  </label>
+                  <label class="radio-inline" for="password_number_required-1">
+                    <input type="radio" name="password_number_required" id="password_number_required-1" value="0">
+                    no
+                  </label>
+                  @else
+                    <label class="radio-inline" for="password_number_required-0">
+                      <input type="radio" name="password_number_required" id="password_number_required-0" value="1">
+                      yes
+                    </label>
+                    <label class="radio-inline" for="password_number_required-1">
+                      <input type="radio" name="password_number_required" id="password_number_required-1" value="0" checked="checked">
+                      no
+                    </label>
+                  @endif
+                </div>
+              </div>
+
+              <!-- Multiple Radios (inline) -->
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="password_lower_case_required">Password lower case required</label>
+                <div class="col-md-4">
+                  @if($app->password_lower_case_required === 1)
+                  <label class="radio-inline" for="password_lower_case_required-0">
+
+                    <input type="radio" name="password_lower_case_required" id="password_lower_case_required-0" value="1" checked="checked">
+                    yes
+                  </label>
+                  <label class="radio-inline" for="password_lower_case_required-1">
+                    <input type="radio" name="password_lower_case_required" id="password_lower_case_required-1" value="0">
+                    no
+                  </label>
+                  @else
+                  <label class="radio-inline" for="password_lower_case_required-0">
+
+                    <input type="radio" name="password_lower_case_required" id="password_lower_case_required-0" value="1">
+                    yes
+                  </label>
+                  <label class="radio-inline" for="password_lower_case_required-1">
+                    <input type="radio" name="password_lower_case_required" id="password_lower_case_required-1" value="0" checked="checked">
+                    no
+                  </label>
+                  @endif
+                </div>
+
+              </div>
+
+              <!-- Multiple Radios (inline) -->
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="password_special_characters_required">Password special characters required</label>
+                <div class="col-md-4">
+                  @if($app->password_special_characters_required === 1)
+                    <label class="radio-inline" for="password_special_characters_required-0">
+                      <input type="radio" name="password_special_characters_required" id="password_special_characters_required-0" value="1" checked="checked">
+                      yes
+                    </label>
+                    <label class="radio-inline" for="password_special_characters_required-1">
+                      <input type="radio" name="password_special_characters_required" id="password_special_characters_required-1" value="0">
+                      no
+                    </label>
+                  @else
+                    <label class="radio-inline" for="password_special_characters_required-0">
+                      <input type="radio" name="password_special_characters_required" id="password_special_characters_required-0" value="1">
+                      yes
+                    </label>
+                    <label class="radio-inline" for="password_special_characters_required-1">
+                      <input type="radio" name="password_special_characters_required" id="password_special_characters_required-1" value="0" checked="checked">
+                      no
+                    </label>
+                  @endif
+
+                </div>
+              </div>
+
+              <!-- Multiple Radios (inline) -->
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="password_upper_case_required">Password upper case required</label>
+                <div class="col-md-4">
+                  @if($app->password_upper_case_required === 1)
+                    <label class="radio-inline" for="password_upper_case_required-0">
+                      <input type="radio" name="password_upper_case_required" id="password_upper_case_required-0" value="1" checked="checked">
+                      yes
+                    </label>
+                    <label class="radio-inline" for="password_upper_case_required-1">
+                      <input type="radio" name="password_upper_case_required" id="password_upper_case_required-1" value="0">
+                      no
+                    </label>
+                  @else
+                    <label class="radio-inline" for="password_upper_case_required-0">
+                      <input type="radio" name="password_upper_case_required" id="password_upper_case_required-0" value="1">
+                      yes
+                    </label>
+                    <label class="radio-inline" for="password_upper_case_required-1">
+                      <input type="radio" name="password_upper_case_required" id="password_upper_case_required-1" value="0" checked="checked">
+                      no
+                    </label>
+                  @endif
+
+                </div>
+              </div>
+
+              <!-- Text input-->
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="password_min_length">Password min length</label>
+                <div class="col-md-4">
+                  <input id="password_min_length" name="password_min_length" value="{{$app->password_min_length}}" type="number" min="7" placeholder="( number > 7)" class="form-control input-md">
+
+                </div>
+              </div>
+
+              <!-- Text input-->
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="password_time_life">Password time life</label>
+                <div class="col-md-4">
+                  <input id="password_time_life" name="password_time_life" value="{{$app->password_time_life}}" type="number" min="1" placeholder="(duration in days >=1)" class="form-control input-md">
+
+                </div>
+              </div>
+
+              <!-- Text input-->
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="time_restriction">Time Restriction</label>
+                <div class="col-md-4">
+                  <input id="time_restriction" name="time_restriction" value="{{$app->time_restriction}}" type="number" min="0" placeholder="(Time in seconds)" class="form-control input-md">
+
+                </div>
+              </div>
+
+            </fieldset>
+          </form>
+          @endforeach
         </div>
       </div>
     </div>
@@ -18,10 +181,124 @@
       <div class="panel panel-default">
         <div class="panel-heading">Users management</div>
         <div class="panel-body">
-          You are in the admin page
+          @foreach($users as $user)
+          <div class="row">
+            <label class="col-md-2 control-label" for="user_{{$user->id}}_role">{{$user->name}}</label>
+            <div class="col-md-6">
+              @foreach($roles as $role)
+              <label class="radio-inline" for="user_{{$user->id}}_role-{{$role->role_id}}">
+                @if($user->role_id === $role->role_id)
+                  <input type="radio" name="user-{{$user->id}}_role" id="user_{{$user->id}}_role-{{$role->role_id}}" value="{{$role->role_id}}" checked="checked">
+                  {{$role->name}}
+                @else
+                  <input type="radio" name="user-{{$user->id}}_role" id="user_{{$user->id}}_role-{{$role->role_id}}" value="{{$role->role_id}}">
+                  {{$role->name}}
+                @endif
+              </label>
+              @endforeach
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-default">Disable</button>
+              <button class="btn btn-default">Reset Password</button>
+            </div>
+          </div>
+
+          @endforeach
         </div>
       </div>
     </div>
   </div>
 </div>
+  <script type="text/javascript">
+    $(document).ready(function(){
+
+      $("input[type=radio]").on("click",function(){
+
+        var name = $(this).attr("name").split("-");
+        var url='';
+        switch(name[0]){
+          case "password_lower_case_required":
+            url="/admin/config/password/character/lower/"+$(this).val();
+            break;
+          case "password_upper_case_required":
+            url="/admin/config/password/character/upper/"+$(this).val();
+            break;
+          case "password_special_characters_required":
+            url="/admin/config/password/character/special/"+$(this).val();
+            break;
+          case "password_number_required":
+            url="/admin/config/password/character/number/"+$(this).val();
+            break;
+          case "user":
+            var user = $(this).attr("id").split("_");
+            url="/user/"+user[1]+"/role/"+$(this).val();
+            break;
+        }
+
+        console.log(url);
+        ajaxBackend(url);
+
+      });
+
+
+      $("input[type=number]").on("blur",function(){
+
+        var $myForm = $('#config_form');
+        if (!$myForm[0].checkValidity()) {
+          // If the form is invalid, submit it. The form won't actually submit;
+          // this will just cause the browser to display the native HTML5 error messages.
+
+          //$myForm.find(':submit').click();
+          $('<input type="submit">').hide().appendTo($myForm).click().remove();
+          alert("invalid value");
+          return;
+        }
+
+        var name = $(this).attr("name");
+        var url='';
+
+        switch(name){
+          case "number_attempt_allowed":
+            url="/admin/config/attempt/"+$(this).val();
+            break;
+          case "time_restriction":
+            url="/admin/config/restriction/"+$(this).val();
+            break;
+          case "number_last_password_disallowed":
+            url="/admin/config/password/disallow/"+$(this).val();
+            break;
+          case "password_time_life":
+            url="/admin/config/password/life/"+$(this).val();
+            break;
+          case "password_min_length":
+            url="/admin/config/password/length/"+$(this).val();
+            break;
+        }
+
+        console.log(url);
+        ajaxBackend(url);
+      });
+    });
+
+
+
+    /**
+     * Function that execute an ajax request to the backend
+     * @param url of the endpoint that we want to reach
+     */
+    function ajaxBackend(url){
+      $.ajax({
+        type: "get",
+        url: url,
+        success: function(){
+          alert("Success !");
+          return true;
+        },
+        error: function(){
+          alert("Success !");
+          return false;
+        }
+      });
+    }
+  </script>
 @endsection

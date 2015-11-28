@@ -82,6 +82,17 @@ Route::get('/square',[
 			'roles' => ['root']
 	]);
 
+/*
+ |-------- Admin routes
+ */
+	Route::get('/user/{userId}/role/{roleId}', [
+			'middleware' => ['auth', 'roles'],
+			'uses' => 'UserController@updateRole',
+			'roles' => ['root']
+	]);
+
+
+
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',

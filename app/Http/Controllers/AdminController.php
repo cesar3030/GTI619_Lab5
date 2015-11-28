@@ -2,9 +2,9 @@
 
 use App\Configuration;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\User;
+use App\Role;
 
-use App\Password;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller {
@@ -17,9 +17,15 @@ class AdminController extends Controller {
    */
   public function index()
   {
-    $appConfig = Configuration::all();
+    $appConfig = Configuration::where('id', 1)->get();
+    $users = User::all();
+    $roles = Role::all();
 
-    return view('Admin/admin')->with('title',"Admin Page")->with('appConfig',$appConfig);
+    return view('Admin/admin')
+        ->with('title',"Admin Page")
+        ->with('appConfig',$appConfig)
+        ->with('users',$users)
+        ->with('roles',$roles);
   }
 
   /**
@@ -52,7 +58,7 @@ class AdminController extends Controller {
    * @param $nbDays
    */
   public function setPasswordTimeLife($nbDays){
-    Configuration::setNumberLastPasswordDisallowed($nbDays);
+    Configuration::setPasswordTimeLife($nbDays);
   }
 
   /**
