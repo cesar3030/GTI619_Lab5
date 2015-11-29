@@ -1,0 +1,8 @@
+default:
+  paths:
+    bootstrap:  '/bootstrap'
+  suites:
+    application:
+      contexts: [ ApplicationContext, FilesystemContext ]
+  formatters:
+    progress: ~
