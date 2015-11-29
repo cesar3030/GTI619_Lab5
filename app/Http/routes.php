@@ -41,6 +41,11 @@ Route::get('/square',[
 			'uses' => 'AdminController@setNumberAttemptAllowed',
 			'roles' => ['root']
 	]);
+	Route::get('/admin/config/account/blocked/{nb}', [
+			'middleware' => ['auth', 'roles'],
+			'uses' => 'AdminController@setNumberMaxBlocked',
+			'roles' => ['root']
+	]);
 	Route::get('/admin/config/restriction/{nbSeconds}', [
 			'middleware' => ['auth', 'roles'],
 			'uses' => 'AdminController@setTimeRestriction',

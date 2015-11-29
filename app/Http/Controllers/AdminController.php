@@ -101,6 +101,14 @@ class AdminController extends Controller {
     Configuration::setPasswordNumberRequired($isRequired);
   }
 
+  /**
+   * Function that set the number of time that an account can be blocked before being desactivate
+   * @param $nb  number of time
+   */
+  public function setNumberMaxBlocked($nb){
+    Configuration::setNumberMaxBlocked($nb);
+  }
+
 
 
 

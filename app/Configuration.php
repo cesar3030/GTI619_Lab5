@@ -109,4 +109,16 @@ class Configuration extends Model {
             ->update(['password_number_required' => $isRequired]);
     }
 
+    /**
+     * Function that set max times that an account can be blocked before to be desactivate
+     * @param $nb
+     */
+    public static function setNumberMaxBlocked($nb){
+        Configuration::where('id', 1)
+            ->update(['nb_max_times_bloked' => $nb]);
+    }
+
+
+
+
 }

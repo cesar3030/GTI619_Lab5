@@ -430,4 +430,5 @@ return array(
     'TestCase' => $baseDir . '/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/Text/Template.php',
     'UpdateColumsForBlokedAccount' => $baseDir . '/database/migrations/2015_11_28_220948_update_colums_for_bloked_account.php',
+    'UpdateMaxBlokedAccountAccount' => $baseDir . '/database/migrations/2015_11_29_070748_update_max_bloked_account_account.php',
 );

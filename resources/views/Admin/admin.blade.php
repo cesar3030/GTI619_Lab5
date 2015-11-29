@@ -169,6 +169,15 @@
                 </div>
               </div>
 
+              <!-- Text input-->
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="nb_max_times_bloked">Max time blocked account</label>
+                <div class="col-md-4">
+                  <input id="nb_max_times_bloked" name="nb_max_times_bloked" value="{{$app->nb_max_times_bloked}}" type="number" min="0" class="form-control input-md">
+
+                </div>
+              </div>
+
             </fieldset>
           </form>
           @endforeach
@@ -276,6 +285,9 @@
             break;
           case "password_min_length":
             url="/admin/config/password/length/"+$(this).val();
+            break;
+          case "nb_max_times_bloked":
+            url="/admin/config/account/blocked/"+$(this).val();
             break;
         }
 

@@ -1,12 +1,17 @@
 <?php namespace App\Http\Controllers\Auth;
 
+use App\Configuration;
 use App\Http\Controllers\Controller;
-use App\Password;
+use App\User;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 
+/**
+ * Class AuthController
+ * @package App\Http\Controllers\Auth
+ */
 class AuthController extends Controller {
 
 	/*
@@ -34,18 +39,24 @@ class AuthController extends Controller {
 		$this->auth = $auth;
 		$this->registrar = $registrar;
 
+		//Variable used to retrieve an error message to the view
+		$this->errorMessage = "";
+
 		$this->middleware('guest', ['except' => 'getLogout']);
 	}
 
+	/**
+	 * @param Request $request
+	 * @return $this|\Illuminate\Http\RedirectResponse
+     */
 	public function postLogin(Request $request)
 	{
-		// check si le compte est bloque + log fail / check si delais d'attente encore actif  + log fail / check si tentatives > au nombre max  + log fail
-		if(!$this->isAccountBanished($request) && !$this->isAccountBlocked($request) && $this->isValidNumberOfTentative($request)){
+		$email = $request->input('email');
+
+		if($this->doesUserHaveAccess($email)){
 			//Verification du mot de passe  + log fail
 
-
-
-	      $this->validate($request, [
+	      	$this->validate($request, [
 			'email' => 'required|email', 'password' => 'required',
 			]);
 
@@ -53,11 +64,12 @@ class AuthController extends Controller {
 
 			if ($this->auth->attempt($credentials, $request->has('remember')))
 			{
+				//We reset the connexion stats (set number of attempts to 0, update last_success and last_try to now)
+				$user = User::where('email',$email)->first();
+				$user->loginWithSuccess();
 				//reset stats
 				return redirect()->intended($this->redirectPath());
 			}
-
-
 
 			return redirect($this->loginPath())
 					->withInput($request->only('email', 'remember'))
@@ -69,7 +81,8 @@ class AuthController extends Controller {
 		return redirect($this->loginPath())
 				->withInput($request->only('email', 'remember'))
 				->withErrors([
-						'email' => "Email Error",//message affich/ a la vue
+						'email' => "Email Error",
+						'Danger: ' => $this->errorMessage//message affich/ a la vue
 				]);
 
 	}
@@ -85,7 +98,7 @@ class AuthController extends Controller {
 	{
 
 		//On check si les criteres de secu sont respectes
-		//isValidPassword($request);
+		//$this->isValidPassword($request);
 		/*si non
 			$this->throwValidationException(
 				$request, $validator
@@ -120,27 +133,74 @@ class AuthController extends Controller {
 		
 	}
 
+	/*
+	 * Function that check is the user follow all the rules required by the application configuration
+	 *
+	 * @param User $user the user trying to sign in
+	 * @return true: the user can sign in / false: the user is not allowed to sign in
+	 */
+	public function doesUserHaveAccess($email){
 
+		$config = Configuration::where('id',1)->first();
+
+		User::updateUserAccountValidity($config,$email);
+
+		$user = User::where('email',$email)->first();
+
+		if($this->isAccountDesactivate($user)){
+			return false;
+		}
+
+		if($this->isAccountBlocked($user)){
+			return false;
+		}
+
+		User::newAttempt($email);
+		$user = User::where('email',$email)->first();
+
+		if(!$this->isValidNumberOfTentative($config,$user)){
+			//we set the account to not valid
+			$user->setAccountValidity(1);
+
+			return false;
+		}
+
+		return true;
+	}
 	/**
 	 * Method who returns true if the account is activated
 	 * and not banished do to an number of bloked session too high
 	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param User $user
 	 *	@return boolean
 	 */
-	public function isAccountBanished(Request $request){
-		return false;
+	public function isAccountDesactivate(User $user){
+
+		if($user->desactivated === 0){
+			return false;
+		}
+
+		$this->errorMessage="Your account is desactivate, KEEP CALM AND CALL THE ADMIN :) ";
+		return true;
+
 	}
 
 	/**
 	 * Method that returns true is the account is blocked
 	 * caused by a too much unsuccessful connexion try
 	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param User $user
 	 *	@return boolean
 	 */
-	public function isAccountBlocked(Request $request){
-		return false;
+	public function isAccountBlocked(User $user){
+
+		//0: the account is not blocked
+		if($user->is_valid_account === 0){
+			return false;
+		}
+
+		$this->errorMessage=" You need to wait, your account is blocked for now !";
+		return true;
 	}
 
 
@@ -148,23 +208,31 @@ class AuthController extends Controller {
 	 * Method that returns true if the number of try is lower
 	 * than the maximum accepted.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param User $user
 	 *	@return boolean
 	 */
-	public function isValidNumberOfTentative(Request $request){
+	public function isValidNumberOfTentative(Configuration $config,User $user){
+
+		if($user->attempt_number >= $config->number_attempt_allowed ){
+			$this->errorMessage=" Too much attempts, the account is blocked for ".$config->time_restriction." seconds.";
+			return false;
+		}
+
 		return true;
 	}
 
-	private function isValidCredentials($request){
-		$passwordFromDb = Password::getCurrentPassword($request->input('email'));
+	private function isValidCredentials($request,User $user){
 		$passwordFromRequest = $request->input('password');
 
-		if(strcmp($passwordFromDb,$passwordFromRequest) == 0){
+		if(strcmp($user->password,$passwordFromRequest) == 0){
 			return true;
 		}
 
 		return false;
 	}
+
+
+
 
 	/**
 	* Method who returns true if the password matches with the required security settings
