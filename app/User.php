@@ -183,9 +183,13 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 			//We add the time to wait before the account to be valid again
 			$time_account_valid_again->addSecond($config->time_restriction);
 
-			dd($time_account_valid_again->diffInSeconds(Carbon::now(),false));
+			//dd($time_account_valid_again->diffInSeconds(Carbon::now(),false));
 			//we compare and set the account to valid if the not valid time is over
-			if($time_account_valid_again->diffInSeconds(Carbon::now(),false) >= 0){
+			/*if($time_account_valid_again->diffInSeconds(Carbon::now(),false) >= 0){
+				$user->setAccountValidity(0);
+				$user->resetAttempts();
+			}*/
+			if(Carbon::now()->diffInSeconds($time_account_valid_again,false) >= 0){
 				$user->setAccountValidity(0);
 				$user->resetAttempts();
 			}
