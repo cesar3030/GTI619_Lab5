@@ -93,6 +93,7 @@ class UserController extends Controller {
 		User::where('id',$userId)
 				->update(['need_reset_password' => 1]);
 	}
+	
 
 	/**
 	 * Update the user's role.
