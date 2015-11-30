@@ -60,12 +60,17 @@ class AuthController extends Controller {
 			'email' => 'required|email', 'password' => 'required',
 			]);
 
-			$credentials = $request->only('email', 'password');
+			$user = User::where('email',$email)->first();
+			$passwordFromForm = $request->input('password');
+			$password = $user->salt.$passwordFromForm;
+
+			//$credentials = $request->only('email', 'password');
+
+			$credentials = ['email'=> $email,'password'=>$password];
 
 			if ($this->auth->attempt($credentials, $request->has('remember')))
 			{
 				//We reset the connexion stats (set number of attempts to 0, update last_success and last_try to now)
-				$user = User::where('email',$email)->first();
 				$user->loginWithSuccess();
 				//reset stats
 				return redirect()->intended($this->redirectPath());

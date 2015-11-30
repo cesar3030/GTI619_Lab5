@@ -30,25 +30,24 @@ class Registrar implements RegistrarContract {
 	 */
 	public function create(array $data)
 	{
-		$pass=bcrypt($data['password']);
+        //We generate a random string to be use as a salt
+		$salt = str_random(60);
+        //We encrypt the password mixed up with the salt
+		$pass=bcrypt($salt.$data['password']);
+        //We create the user with all his given information and his salt
 		$user = User::create([
 			'name' => $data['name'],
 			'email' => $data['email'],
 			'password' => $pass,
+			'salt'=> $salt
 		]);
 
+        //We create a new password in the password history table
 		$password = new Password;
 		$password->password = $pass;
 		$password->user_id=$user->id;
 		$password->save();
 
-
-
-		
-
-
-
-		//User::createUser($data['name'],$data['email'],$data['password']);
 		return $user;
 	}
 
