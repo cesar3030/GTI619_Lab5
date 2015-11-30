@@ -13,7 +13,12 @@
 
 Route::get('/', 'WelcomeController@index');
 
-Route::get('home', 'HomeController@index');
+//Route::get('home', 'HomeController@index');
+Route::get('home',[
+		'middleware' => ['passwordCheck'],
+		'uses' => 'HomeController@index'
+]);
+
 
 Route::get('/circle',[
      'middleware' => ['auth', 'roles'],

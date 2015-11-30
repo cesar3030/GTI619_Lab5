@@ -37,23 +37,6 @@ class Password extends Model {
     return $result;
   }
 
-  /**
-  * Function that set the password linked to the id given as an old password
-  * @var $idPassword password's id that is gonna be updated
-  */  
-  public function setOldPassword($idPassword)
-  {
-    
-  }
-
-  /**
-  * Function that create a new password to a user
-  * @var $password the new password
-  */
-  public function setNewPassword($password)
-  {
-    
-  }
 
 
 

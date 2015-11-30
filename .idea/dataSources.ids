@@ -4168,15 +4168,20 @@ User</columns>
         <data-type>int(11)</data-type>
         <default-expression>&apos;0&apos;</default-expression>
       </column>
-      <index id="1025" parent="99" name="users_email_unique">
+      <column id="1025" parent="99" name="need_reset_password">
+        <mandatory>1</mandatory>
+        <data-type>int(11)</data-type>
+        <default-expression>&apos;0&apos;</default-expression>
+      </column>
+      <index id="1026" parent="99" name="users_email_unique">
         <columns>email</columns>
         <unique>1</unique>
       </index>
-      <key id="1026" parent="99" name="PRIMARY">
+      <key id="1027" parent="99" name="PRIMARY">
         <columns>id</columns>
         <primary>1</primary>
       </key>
-      <key id="1027" parent="99" name="users_email_unique">
+      <key id="1028" parent="99" name="users_email_unique">
         <columns>email</columns>
         <underlying-index>users_email_unique</underlying-index>
       </key>

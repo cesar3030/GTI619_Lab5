@@ -183,12 +183,50 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 			//We add the time to wait before the account to be valid again
 			$time_account_valid_again->addSecond($config->time_restriction);
 
+			dd($time_account_valid_again->diffInSeconds(Carbon::now(),false));
 			//we compare and set the account to valid if the not valid time is over
-			if($time_account_valid_again->diffInSeconds(Carbon::now()) >= 0){
+			if($time_account_valid_again->diffInSeconds(Carbon::now(),false) >= 0){
 				$user->setAccountValidity(0);
 				$user->resetAttempts();
 			}
 		}
+	}
+
+	/**
+	 * Function that return if the user need to reset his password
+	 * @return true if the user need to reset his password / false if he does not have
+	 */
+	public function needToResetPassword(){
+
+		if($this->need_reset_password === 0){
+			return false;
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * Method that return if user's current password is too old
+	 * @param $idUser id of the user that we whan to know if his password is too old or not
+	 * @return true if the password is too old / false the validity is still good
+	 */
+	public function isPasswordTooOld()
+	{
+
+		$password = Password::Where('user_id', $this->id)->orderBy('created_at', 'desc')->first();
+		$config = Configuration::Where('id', 1)->first();
+
+		//We retrieve the creation time of the current user password
+		$time_current_password = Carbon::instance(new \DateTime($password->created_at));
+		//We add the time to wait before the account to be valid again
+		$time_current_password->addDays($config->password_time_life);
+
+		if (Carbon::now()->diffInSeconds($time_current_password,false) < 0) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

@@ -83,19 +83,15 @@ class UserController extends Controller {
 	}
 
 	/**
-	 * Update the user's role.
+	 * Change the table of a user to ask a new password when the next visit of his home page.
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function resetPassword($userId)
 	{
-		$password = bcrypt("newPassword");
-
-		//ajouter le model de la table resetpassword et ajouter un password temp
-		/*User::where('id',$userId)
-				->update(['password' => $password]);*/
-
+		User::where('id',$userId)
+				->update(['need_reset_password' => 1]);
 	}
 
 	/**
