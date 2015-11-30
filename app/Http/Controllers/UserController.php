@@ -4,6 +4,10 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
+use Input;
+use Auth;
+use Hash;
+use App\Password;
 
 class UserController extends Controller {
 
@@ -116,6 +120,48 @@ class UserController extends Controller {
 	public function destroy($id)
 	{
 		//
+	}
+
+	/**
+	 * Function that renew a password that was too old or because of the admin
+	 */
+	public function renewPassword(){
+
+		$oldPassword= Input::get('old_password');//$request->input("old_password");
+		$user=Auth::user();
+		$newPassword =Input::get('password');// $request->input("password");
+
+
+
+		/*$this->validate($request, [
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed',
+        ]);*/
+
+
+		if(Hash::check($user->salt.$oldPassword, Auth::user()->password)){
+
+			User::where("id",$user->id)
+					->update(
+							[	"password" => bcrypt($user->salt.$newPassword),
+								"need_reset_password" => 0
+							]);
+
+			//We create a new password in the password history table
+			$password = new Password;
+			$password->password = bcrypt($user->salt.$newPassword);
+			$password->user_id=$user->id;
+			$password->save();
+
+			return redirect('/auth/logout');
+		}
+
+		return view('auth.reset_confirm_old_password')
+				->with('token', Auth::user()->remember_token)
+				->withErrors([
+						'Old password' => "The old password given was not correct",
+				]);
 	}
 
 }

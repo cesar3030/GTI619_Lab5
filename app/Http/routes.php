@@ -110,8 +110,10 @@ Route::get('/square',[
 			'uses' => 'UserController@accountActivation',
 			'roles' => ['root']
 	]);
-
-
+	Route::get('/user/password/renew', [
+			'middleware' => ['auth'],
+			'uses' => 'UserController@renewPassword'
+	]);
 
 
 Route::controllers([

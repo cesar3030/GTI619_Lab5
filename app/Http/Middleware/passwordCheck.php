@@ -1,6 +1,7 @@
 <?php namespace App\Http\Middleware;
 
 use Closure;
+use Auth;
 
 class passwordCheck {
 
@@ -15,27 +16,35 @@ class passwordCheck {
 	{
 		if($request->user()->needToResetPassword()){
 
-            return response([
-                'error' => [
-                    'code' => 'Error Password',
-                    'description' => 'Password need to be reset.'
-                ]
-            ], 401);
+            return view('auth.reset_confirm_old_password')
+                ->with('token', Auth::user()->remember_token)
+                ->withErrors([
+                    'Password' => "You need to reset your password",
+                ]);
 		}
 
 		if($request->user()->isPasswordTooOld()){
 
-            return response([
-                'error' => [
-                    'code' => 'Error Password',
-                    'description' => 'Password too old.'
-                ]
-            ], 401);
+            return view('auth.reset_confirm_old_password')
+                ->with('token', Auth::user()->remember_token)
+                ->withErrors([
+                    'Password' => "Your password is too old, you need to change it !",
+                ]);
 
 		}
 
 		return $next($request);
 	}
+
+    /**
+     * Show the application login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getResetPasswordForm()
+    {
+        return view('auth.reset');
+    }
 
 
 

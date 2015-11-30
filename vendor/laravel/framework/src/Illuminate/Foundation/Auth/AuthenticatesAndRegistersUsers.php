@@ -81,6 +81,7 @@ trait AuthenticatesAndRegistersUsers {
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
+
 	public function postLogin(Request $request)
 	{
 			//Verification du mot de passe  + log fail
