@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Auth;
 
+use Illuminate\Log\Writer;
 use App\Configuration;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -7,7 +8,6 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
-
 /**
  * Class AuthController
  * @package App\Http\Controllers\Auth
@@ -34,10 +34,11 @@ class AuthController extends Controller {
 	 * @param  \Illuminate\Contracts\Auth\Registrar  $registrar
 	 * @return void
 	 */
-	public function __construct(Guard $auth, Registrar $registrar)
+	public function __construct(Guard $auth, Registrar $registrar, Writer $log)
 	{
 		$this->auth = $auth;
 		$this->registrar = $registrar;
+		$this->log = $log;
 
 		//Variable used to retrieve an error message to the view
 		$this->errorMessage = "";
@@ -72,9 +73,13 @@ class AuthController extends Controller {
 			{
 				//We reset the connexion stats (set number of attempts to 0, update last_success and last_try to now)
 				$user->loginWithSuccess();
+
+				$this->log->notice($user->email." just logged in !!");
 				//reset stats
 				return redirect()->intended($this->redirectPath());
 			}
+
+			$this->log->notice($user->email." failed to login");
 
 			return redirect($this->loginPath())
 					->withInput($request->only('email', 'remember'))
@@ -102,13 +107,6 @@ class AuthController extends Controller {
 	public function postRegister(Request $request)
 	{
 
-		//On check si les criteres de secu sont respectes
-		//$this->isValidPassword($request);
-		/*si non
-			$this->throwValidationException(
-				$request, $validator
-			);
-		*/
 		$validator = $this->registrar->validator($request->all());
 		
 		if($this->isValidPassword($request)){
@@ -153,10 +151,12 @@ class AuthController extends Controller {
 		$user = User::where('email',$email)->first();
 
 		if($this->isAccountDesactivate($user)){
+			$this->log->error($user->email." tried to login but his account is desactivate !!");
 			return false;
 		}
 
 		if($this->isAccountBlocked($user)){
+			$this->log->error($user->email." tried to login but his account is blocked !!");
 			return false;
 		}
 
@@ -166,7 +166,7 @@ class AuthController extends Controller {
 		if(!$this->isValidNumberOfTentative($config,$user)){
 			//we set the account to not valid
 			$user->setAccountValidity(1);
-
+			$this->log->error($user->email." tried to login but he failed, too many attempts !!");
 			return false;
 		}
 

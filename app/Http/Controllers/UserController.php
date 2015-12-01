@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Configuration;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -142,19 +143,30 @@ class UserController extends Controller {
 
 		if(Hash::check($user->salt.$oldPassword, Auth::user()->password)){
 
-			User::where("id",$user->id)
-					->update(
-							[	"password" => bcrypt($user->salt.$newPassword),
-								"need_reset_password" => 0
-							]);
+			if($user->canPasswordBeUse($newPassword)){
 
-			//We create a new password in the password history table
-			$password = new Password;
-			$password->password = bcrypt($user->salt.$newPassword);
-			$password->user_id=$user->id;
-			$password->save();
+                User::where("id",$user->id)
+                    ->update(
+                        [	"password" => bcrypt($user->salt.$newPassword),
+                            "need_reset_password" => 0
+                        ]);
 
-			return redirect('/auth/logout');
+                //We create a new password in the password history table
+                $password = new Password;
+                $password->password = bcrypt($user->salt.$newPassword);
+                $password->user_id=$user->id;
+                $password->save();
+
+                return redirect('/auth/logout');
+            }
+
+            $config = Configuration::where("id",1)->first();
+
+            return view('auth.reset_confirm_old_password')
+                ->with('token', Auth::user()->remember_token)
+                ->withErrors([
+                    'Not authorized' => "The password can't be one of your ".$config->number_last_password_disallowed." lasts.",
+                ]);
 		}
 
 		return view('auth.reset_confirm_old_password')

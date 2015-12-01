@@ -48,6 +48,8 @@ class Registrar implements RegistrarContract {
 		$password->user_id=$user->id;
 		$password->save();
 
+		Log::warning('New account created with the email: '.$data['email']);
+
 		return $user;
 	}
 

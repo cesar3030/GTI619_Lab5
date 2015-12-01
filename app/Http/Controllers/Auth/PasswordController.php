@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use App\Http\Middleware\Auth;
+use Illuminate\Log\Writer;
 
 class PasswordController extends Controller {
 
@@ -29,10 +30,11 @@ class PasswordController extends Controller {
 	 * @param  \Illuminate\Contracts\Auth\PasswordBroker  $passwords
 	 * @return void
 	 */
-	public function __construct(Guard $auth, PasswordBroker $passwords)
+	public function __construct(Guard $auth, PasswordBroker $passwords, Writer $log)
 	{
 		$this->auth = $auth;
 		$this->passwords = $passwords;
+        $this->log = $log;
 
 		$this->middleware('guest');
 	}
