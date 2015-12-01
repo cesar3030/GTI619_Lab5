@@ -102,10 +102,10 @@ trait ResetsPasswords {
 
 		$response = $this->passwords->reset($credentials, function($user, $password)
 		{
-			$user->password = bcrypt($password);
+			$user->password = bcrypt($user->salt.$password);
 
 			$user->save();
-
+			$this->log->alert($user->email." has reset his password");
 			$this->auth->login($user);
 		});
 

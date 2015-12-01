@@ -1,12 +1,15 @@
 <?php namespace App;
 require '../vendor/autoload.php';
 
+use App\Configuration as ConfigurationBD;
 use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Support\Facades\Hash;
+
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
@@ -219,7 +222,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	{
 
 		$password = Password::Where('user_id', $this->id)->orderBy('created_at', 'desc')->first();
-		$config = Configuration::Where('id', 1)->first();
+		$config = ConfigurationBD::Where('id', 1)->first();
 
 		//We retrieve the creation time of the current user password
 		$time_current_password = Carbon::instance(new \DateTime($password->created_at));
@@ -231,6 +234,27 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		}
 
 		return false;
+	}
+
+	/**
+	 * Function that check if the new password is not one of the x lasts password.
+	 * (x depends of the application configuration)
+	 *
+	 * @param $newPassword The newPassword the user wants to register with
+	 * @return true if the password can be use / false if it can't
+	 */
+	public function canPasswordBeUse($newPassword){
+		$config = ConfigurationBD::where("id",1)->first();
+
+		$passwords = Password::where('user_id',$this->id)->orderBy('created_at', 'desc')->limit($config->number_last_password_disallowed)->get();
+
+		foreach($passwords as $oldPassword){
+			if(Hash::check($this->salt.$newPassword,$oldPassword->password)){
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }
