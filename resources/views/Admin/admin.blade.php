@@ -254,7 +254,7 @@
       });
 
 
-      $("input[type=number]").on("blur",function(){
+      $("input[type=number]").on("focusout",function(){
 
         var $myForm = $('#config_form');
         if (!$myForm[0].checkValidity()) {
@@ -345,15 +345,18 @@
      * @param url of the endpoint that we want to reach
      */
     function ajaxBackend(url){
+
+      toastr.clear();
+
       $.ajax({
         type: "get",
         url: url,
         success: function(){
-          alert("Success !");
+          toastr.success('Success', 'Operation done !');
           return true;
         },
         error: function(){
-          alert("Success !");
+          toastr.error('FAIL', 'Error occurred!');
           return false;
         }
       });
