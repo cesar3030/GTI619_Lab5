@@ -246,6 +246,40 @@ class AuthController extends Controller {
 	*	@return boolean
 	*/
 	public function isValidPassword(Request $request){
+
+		$passwordFromRequest = $request->input('password');
+		array $valid
+
+		if(strlen($passwordFromRequest) >= getPasswordMinLength){
+
+
+		}else{
+
+			$this->errorMessage=" Your password is not enough long ";
+		}
+
+		if(getPasswordLowerCaseRequired() === 1){
+			$validator = Validator::make(
+				array('LowerCase'=>'Required');
+			);
+		}
+		if(getPasswordUpperCaseRequired() === 1){
+			$validator = Validator::make(
+				array('UpperCase'=>'Required');
+			);
+		}
+		if(getPasswordSpecialCharactersRequired() === 1){
+			$validator = Validator::make(
+				array('SpecialCharacters'=>'Required');
+			);
+		}
+		if(getPasswordNumberRequired() === 1){
+
+			$validator = Validator::make(
+				array('Number'=>'Required');
+			);
+		}
+
 		return true;
 	}
 

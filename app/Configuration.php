@@ -74,12 +74,30 @@ class Configuration extends Model {
     }
 
     /**
+     * Function that get the minimum length accepted for a password
+     * @param $length
+     */
+    public static function getPasswordMinLength(){
+        $config=Configuration::where('id', 1).first();
+        return $config->password_min_length;
+    }
+
+    /**
      * Function that set if at least a lower case is required for a password
      * @param $isRequired  1 -> yes / 0 -> no
      */
     public static function setPasswordLowerCaseRequired($isRequired){
         Configuration::where('id', 1)
             ->update(['password_lower_case_required' => $isRequired]);
+    }
+
+     /**
+     * 
+     * @param $isRequired  1 -> yes / 0 -> no
+     */
+    public static function getPasswordLowerCaseRequired(){
+        $config=Configuration::where('id', 1).first();
+        return $config->password_lower_case_required;
     }
 
     /**
@@ -92,12 +110,30 @@ class Configuration extends Model {
     }
 
     /**
+     * Function that get if at least an upper case is required for a password
+     * @param $isRequired  1 -> yes / 0 -> no
+     */
+    public static function getPasswordUpperCaseRequired(){
+        $config=Configuration::where('id', 1).first();
+        return $config->password_upper_case_required;
+    }
+
+    /**
      * Function that set if at least a special character is required for a password
      * @param $isRequired  1 -> yes / 0 -> no
      */
     public static function setPasswordSpecialCharactersRequired($isRequired){
         Configuration::where('id', 1)
             ->update(['password_special_characters_required' => $isRequired]);
+    }
+
+     /**
+     * Function that set if at least a special character is required for a password
+     * @param $isRequired  1 -> yes / 0 -> no
+     */
+    public static function getPasswordSpecialCharactersRequired(){
+        $config=Configuration::where('id', 1).first();
+        return $config->password_special_characters_required;
     }
 
     /**
@@ -108,7 +144,14 @@ class Configuration extends Model {
         Configuration::where('id', 1)
             ->update(['password_number_required' => $isRequired]);
     }
-
+     /**
+     * Function that get if at least a number is required for a password
+     * @param $isRequired  1 -> yes / 0 -> no
+     */
+    public static function getPasswordNumberRequired(){
+        $config=Configuration::where('id', 1).first();
+        return $config->password_number_required;
+    }
     /**
      * Function that set max times that an account can be blocked before to be desactivate
      * @param $nb
