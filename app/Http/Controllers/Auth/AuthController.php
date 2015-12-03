@@ -106,34 +106,18 @@ class AuthController extends Controller {
 	 */
 	public function postRegister(Request $request)
 	{
-
 		$validator = $this->registrar->validator($request->all());
-		
-		if($this->isValidPassword($request)){
 
-			
-
-			if ($validator->fails())
-			{
-				$this->throwValidationException(
-						$request, $validator
-				);
-			}
-
-			$this->auth->login($this->registrar->create($request->all()));
-
-			return redirect($this->redirectPath());
-
-		}
-		else
+		if ($validator->fails())
 		{
-			
-				$this->throwValidationException(
-						$request, $validator
-				);
-
+			$this->throwValidationException(
+					$request, $validator
+			);
 		}
-		
+
+		$this->auth->login($this->registrar->create($request->all()));
+
+		return redirect($this->redirectPath());
 	}
 
 	/*
@@ -246,6 +230,9 @@ class AuthController extends Controller {
 	*	@return boolean
 	*/
 	public function isValidPassword(Request $request){
+
+
+
 		return true;
 	}
 

@@ -4,7 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use App\Configuration;
+use App\User;
 trait ResetsPasswords {
 
 	/**
@@ -93,32 +94,44 @@ trait ResetsPasswords {
 		$this->validate($request, [
 			'token' => 'required',
 			'email' => 'required|email',
-			'password' => 'required|confirmed',
+			'password' => 'required|confirmed|regex:'.Configuration::getPasswordCriteria(),
 		]);
 
 		$credentials = $request->only(
 			'email', 'password', 'password_confirmation', 'token'
 		);
 
-		$response = $this->passwords->reset($credentials, function($user, $password)
-		{
-			$user->password = bcrypt($user->salt.$password);
+		$user2=User::where('email',$request->input("email"))->first();
 
-			$user->save();
-			$this->log->alert($user->email." has reset his password");
-			$this->auth->login($user);
-		});
+		if($user2->canPasswordBeUse($request->input("password"))){
 
-		switch ($response)
-		{
-			case PasswordBroker::PASSWORD_RESET:
-				return redirect($this->redirectPath());
+			$response = $this->passwords->reset($credentials, function($user, $password)
+			{
+				$user->password = bcrypt($user->salt.$password);
+				$user->need_reset_password=0;
+				$user->save();
+				$this->log->alert($user->email." has reset his password");
+				$this->auth->login($user);
+			});
 
-			default:
-				return redirect()->back()
-							->withInput($request->only('email'))
-							->withErrors(['email' => trans($response)]);
+			switch ($response)
+			{
+				case PasswordBroker::PASSWORD_RESET:
+					return redirect($this->redirectPath());
+
+				default:
+					return redirect()->back()
+								->withInput($request->only('email'))
+								->withErrors(['email' => trans($response)]);
+			}
 		}
+		$config = Configuration::where("id",1)->first();
+		return redirect()->back()
+				->withInput($request->only('email'))
+				->withErrors([
+						'Not authorized' => "The password can't be one of your ".$config->number_last_password_disallowed." lasts.",
+				]);
+
 	}
 
 	/**

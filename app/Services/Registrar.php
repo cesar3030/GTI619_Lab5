@@ -1,5 +1,6 @@
 <?php namespace App\Services;
 
+use App\Configuration;
 use App\User;
 use App\Password;
 use Validator;
@@ -27,7 +28,7 @@ class Registrar implements RegistrarContract {
 		return Validator::make($data, [
 			'name' => 'required|max:255',
 			'email' => 'required|email|max:255|unique:users',
-			'password' => 'required|confirmed|min:6',
+			'password' => 'required|confirmed|regex:'.Configuration::getPasswordCriteria(),
 		]);
 	}
 
