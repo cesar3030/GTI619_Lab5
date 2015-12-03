@@ -48,6 +48,7 @@ class UserController extends Controller {
 	{	$user = new User;
 		$user->id=$userId;
 		$user->setAccountDesactivate($value);
+
 	}
 
 

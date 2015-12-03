@@ -154,7 +154,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 				->update(['desactivated' => $value]);
 
 		//we update the nb_times_blocked
-		if($value === 0){
+		if($value == 0){
 			User::where('id',$this->id)->update(['nb_times_bloked' => 0]);
 			$this->setAccountValidity(0);
 		}
@@ -177,6 +177,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 * if the delay is over.
 	 */
 	public static function updateUserAccountValidity($config, $email){
+
+
 		$user = User::where('email',$email)->first();
 
 		if($user->is_valid_account === 1){
@@ -187,16 +189,18 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 			$time_account_valid_again->addSecond($config->time_restriction);
 
 			//dd($time_account_valid_again->diffInSeconds(Carbon::now(),false));
+			//dd(Carbon::now()->diffInSeconds($time_account_valid_again,false));
 			//we compare and set the account to valid if the not valid time is over
 			/*if($time_account_valid_again->diffInSeconds(Carbon::now(),false) >= 0){
 				$user->setAccountValidity(0);
 				$user->resetAttempts();
 			}*/
-			if(Carbon::now()->diffInSeconds($time_account_valid_again,false) >= 0){
+			if($time_account_valid_again->diffInSeconds(Carbon::now(),false) >= 0){
 				$user->setAccountValidity(0);
 				$user->resetAttempts();
 			}
 		}
+
 	}
 
 	/**

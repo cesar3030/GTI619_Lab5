@@ -198,6 +198,13 @@ class AuthController extends Controller {
 	 */
 	public function isAccountBlocked(User $user){
 
+		$config=Configuration::where('id',1)->first();
+
+		if($user->nb_times_bloked >= $config->nb_max_times_bloked)
+		{
+			$user->setAccountDesactivate(1);
+			return true;
+		}
 		//0: the account is not blocked
 		if($user->is_valid_account === 0){
 			return false;

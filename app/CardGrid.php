@@ -10,7 +10,7 @@ class CardGrid extends Model {
         $test=[
             "A1"=>"58%yu","A2"=>"uy*ty","A3"=>"IHS45","A4"=>"ygu?","A5"=>"iuh$",
             "B1"=>"58%yu","B2"=>"uy*ty","B3"=>"IHS45","B4"=>"ygu?","B5"=>"iuh$",
-            "C1"=>"58%yu","C2"=>"uy*ty","C3"=>"IHS45","C4"=>"yooou?","C5"=>"iuh$",
+            "C1"=>"58%yu","C2"=>"uy*ty","C3"=>"IHS45","C4"=>"ygu?","C5"=>"iuh$",
             "D1"=>"58%yu","D2"=>"uy*ty","D3"=>"IHS45","D4"=>"ygu?","D5"=>"iuh$"];
 
         $letters = array("A","B","C","D");
