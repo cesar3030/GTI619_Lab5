@@ -224,8 +224,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	public function isPasswordTooOld()
 	{
-
-		$password = Password::Where('user_id', $this->id)->orderBy('created_at', 'desc')->first();
+		$password = Password::Where('password', $this->password)->first();
 		$config = ConfigurationBD::Where('id', 1)->first();
 
 		//We retrieve the creation time of the current user password

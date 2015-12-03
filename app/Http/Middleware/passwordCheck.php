@@ -14,6 +14,7 @@ class passwordCheck {
 	 */
 	public function handle($request, Closure $next)
 	{
+
 		if($request->user()->needToResetPassword()){
 
             return view('auth.reset_confirm_old_password')

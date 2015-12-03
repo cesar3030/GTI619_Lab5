@@ -81,16 +81,16 @@ class UserController extends Controller {
 			}
 
 			if($user->canPasswordBeUse($newPassword)){
-
+					$newPwd=bcrypt($user->salt.$newPassword);
                 User::where("id",$user->id)
                     ->update(
-                        [	"password" => bcrypt($user->salt.$newPassword),
+                        [	"password" => $newPwd,
                             "need_reset_password" => 0
                         ]);
 
                 //We create a new password in the password history table
                 $password = new Password;
-                $password->password = bcrypt($user->salt.$newPassword);
+                $password->password = $newPwd;
                 $password->user_id=$user->id;
                 $password->save();
 
