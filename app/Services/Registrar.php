@@ -4,8 +4,17 @@ use App\User;
 use App\Password;
 use Validator;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
+use Illuminate\Log\Writer;
 
 class Registrar implements RegistrarContract {
+
+
+
+	public function __construct(Writer $log)
+	{
+		$this->log = $log;
+	}
+
 
 	/**
 	 * Get a validator for an incoming registration request.
@@ -48,7 +57,7 @@ class Registrar implements RegistrarContract {
 		$password->user_id=$user->id;
 		$password->save();
 
-		Log::warning('New account created with the email: '.$data['email']);
+		$this->log->warning('New account created with the email: '.$data['email']);
 
 		return $user;
 	}
