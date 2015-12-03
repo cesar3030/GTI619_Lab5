@@ -36,6 +36,14 @@
 						</div>
 
 						<div class="form-group">
+							<label class="col-md-4 control-label">key for {{$keyRequired}}</label>
+							<div class="col-md-6">
+								<input type="text" class="form-control" name="keyValue">
+								<input type="hidden" value="{{$keyRequired}}" class="form-control" name="keyRequired">
+							</div>
+						</div>
+
+						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								<div class="checkbox">
 									<label>

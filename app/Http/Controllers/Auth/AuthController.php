@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Auth;
 
+use App\CardGrid;
 use Illuminate\Log\Writer;
 use App\Configuration;
 use App\Http\Controllers\Controller;
@@ -69,6 +70,20 @@ class AuthController extends Controller {
 
 			$credentials = ['email'=> $email,'password'=>$password];
 
+
+			$key=$request->input('keyRequired');
+			$value=$request->input('keyValue');
+			$cardGrid=new CardGrid;
+
+			if($cardGrid->validateValue($key,$value)==false){
+				return redirect($this->loginPath())
+						->withInput($request->only('email', 'remember'))
+						->withErrors([
+								'Card grid' => "The code is wrong",
+						]);
+			}
+
+
 			if ($this->auth->attempt($credentials, $request->has('remember')))
 			{
 				//We reset the connexion stats (set number of attempts to 0, update last_success and last_try to now)
@@ -106,34 +121,18 @@ class AuthController extends Controller {
 	 */
 	public function postRegister(Request $request)
 	{
-
 		$validator = $this->registrar->validator($request->all());
-		
-		if($this->isValidPassword($request)){
 
-			
-
-			if ($validator->fails())
-			{
-				$this->throwValidationException(
-						$request, $validator
-				);
-			}
-
-			$this->auth->login($this->registrar->create($request->all()));
-
-			return redirect($this->redirectPath());
-
-		}
-		else
+		if ($validator->fails())
 		{
-			
-				$this->throwValidationException(
-						$request, $validator
-				);
-
+			$this->throwValidationException(
+					$request, $validator
+			);
 		}
-		
+
+		$this->auth->login($this->registrar->create($request->all()));
+
+		return redirect($this->redirectPath());
 	}
 
 	/*
@@ -246,6 +245,9 @@ class AuthController extends Controller {
 	*	@return boolean
 	*/
 	public function isValidPassword(Request $request){
+
+
+
 		return true;
 	}
 

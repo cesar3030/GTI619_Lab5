@@ -119,6 +119,44 @@ class Configuration extends Model {
     }
 
 
+    /**
+     * Function that return the regex that the password need match
+     * @return the regex
+     */
+    public static function getPasswordCriteria(){
+        $config = Configuration::where('id', 1)->first();
+
+        $regex = "/^";
+
+        if($config->password_lower_case_required == 1){
+            $regex.="(?=.*[a-z])";
+        }
+
+        if($config->password_upper_case_required == 1){
+            $regex.="(?=.*[A-Z])";
+        }
+
+        if($config->password_special_characters_required == 1){
+            $regex.="(?=.*[!$#%*&])";
+        }
+
+        if($config->password_number_required == 1){
+            $regex.="(?=.*[0-9])";
+        }
+
+        if($config->password_min_length > 6){
+            $regex.=".{".$config->password_min_length.",}$";
+        }
+        else{
+            $regex.=".{6,}$";
+        }
+
+        return $regex."/m";
+    }
+
+
+
+
 
 
 }
