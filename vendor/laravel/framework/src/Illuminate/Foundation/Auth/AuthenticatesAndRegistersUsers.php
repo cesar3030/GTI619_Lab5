@@ -1,5 +1,6 @@
 <?php namespace Illuminate\Foundation\Auth;
 
+use App\CardGrid;
 use Illuminate\Http\Request;
 use App\Password;
 use Illuminate\Contracts\Auth\Guard;
@@ -72,7 +73,10 @@ trait AuthenticatesAndRegistersUsers {
 	 */
 	public function getLogin()
 	{
-		return view('auth.login');
+		$cardGrid = new CardGrid;
+
+		return view('auth.login')
+				->with("keyRequired",$cardGrid->getKey());
 	}
 
 	/**

@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Auth;
 
+use App\CardGrid;
 use Illuminate\Log\Writer;
 use App\Configuration;
 use App\Http\Controllers\Controller;
@@ -68,6 +69,20 @@ class AuthController extends Controller {
 			//$credentials = $request->only('email', 'password');
 
 			$credentials = ['email'=> $email,'password'=>$password];
+
+
+			$key=$request->input('keyRequired');
+			$value=$request->input('keyValue');
+			$cardGrid=new CardGrid;
+
+			if($cardGrid->validateValue($key,$value)==false){
+				return redirect($this->loginPath())
+						->withInput($request->only('email', 'remember'))
+						->withErrors([
+								'Card grid' => "The code is wrong",
+						]);
+			}
+
 
 			if ($this->auth->attempt($credentials, $request->has('remember')))
 			{
