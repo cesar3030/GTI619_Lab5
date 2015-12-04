@@ -19,7 +19,7 @@
               <div class="form-group">
                 <label class="col-md-4 control-label" for="number_attempt_allowed">Number Attempt allowed</label>
                 <div class="col-md-4">
-                  <input id="number_attempt_allowed" name="number_attempt_allowed" value="{{$app->number_attempt_allowed}}" type="number" min="1" placeholder="(number)" class="form-control input-md">
+                  <input id="number_attempt_allowed" name="number_attempt_allowed" value="{{$app->number_attempt_allowed}}" type="number" min="3" placeholder="(number >=3 )" class="form-control input-md">
 
                 </div>
               </div>
@@ -173,7 +173,7 @@
               <div class="form-group">
                 <label class="col-md-4 control-label" for="nb_max_times_bloked">Max time blocked account</label>
                 <div class="col-md-4">
-                  <input id="nb_max_times_bloked" name="nb_max_times_bloked" value="{{$app->nb_max_times_bloked}}" type="number" min="0" class="form-control input-md">
+                  <input id="nb_max_times_bloked" name="nb_max_times_bloked" value="{{$app->nb_max_times_bloked}}" type="number" min="2" class="form-control input-md">
 
                 </div>
               </div>
@@ -192,8 +192,8 @@
         <div class="panel-body">
           @foreach($users as $user)
           <div class="row">
-            <label class="col-md-2 control-label" for="user_{{$user->id}}_role">{{$user->name}}</label>
-            <div class="col-md-6">
+            <label class="col-md-2  col-xs-1 control-label" style="overflow-x:hidden;" for="user_{{$user->id}}_role">{{$user->name}}</label>
+            <div class="col-md-6 col-xs-6">
               @foreach($roles as $role)
               <label class="radio-inline" for="user_{{$user->id}}_role-{{$role->role_id}}">
                 @if($user->role_id === $role->role_id)

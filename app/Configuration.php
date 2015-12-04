@@ -137,7 +137,7 @@ class Configuration extends Model {
         }
 
         if($config->password_special_characters_required == 1){
-            $regex.="(?=.*[!$#%*&])";
+            $regex.="(?=.*[!$#@%*&])";
         }
 
         if($config->password_number_required == 1){
